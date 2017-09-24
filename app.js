@@ -4,7 +4,7 @@ import config from 'config';
 import session from 'express-session';
 import passport from 'passport';
 import express from 'express';
-
+import ejs from 'ejs';
 const TwitterStrategy = require('passport-twitter').Strategy;
 
 const app = express()
@@ -22,15 +22,18 @@ passport.deserializeUser((obj, callback) => {
 passport.use(new TwitterStrategy({
     consumerKey: config.get('twitter.consumerKey'),
     consumerSecret: config.get('twitter.consumerSecret'),
-    callbackURL: "http://127.0.0.1:8000/auth/twitter/callback"
+    callbackURL: config.get('twitter.callbackUrl')
 },
 // 認証後のアクション
-function(accessToken, refreshToken, profile, callback) {
+(accessToken, refreshToken, profile, callback) => {
     process.nextTick(() => {
         console.log(profile); //必要に応じて変更
         return callback(null, profile);
     });
 }));
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
 
 // セッションの設定
 app.use(session({
@@ -45,8 +48,12 @@ app.use(passport.session());
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 // callback後の設定
-app.get('/auth/twitter/callback', passport.authenticate('twitter', {failureRedirect: '/login' }), function(req, res) {
+app.get('/auth/twitter/callback', passport.authenticate('twitter', {failureRedirect: '/login' }), (req, res) => {
     res.redirect('/'); 
+});
+
+app.get('/', function(req, res) {
+    res.render('index', {title : 'タイトル'});
 });
 
 app.listen(8000)

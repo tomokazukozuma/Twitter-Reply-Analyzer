@@ -10,6 +10,7 @@
     "commander": "2.9.0",
     "config": "1.25.1",
     "dotenv": "4.0.0",
+    "ejs": "^2.5.7",
     "express": "^4.15.4",
     "express-session": "^1.15.5",
     "moment": "^2.18.1",
