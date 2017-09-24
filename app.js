@@ -5,7 +5,7 @@ import session from 'express-session';
 import passport from 'passport';
 import express from 'express';
 import ejs from 'ejs';
-const TwitterStrategy = require('passport-twitter').Strategy;
+import TwitterStrategy from 'passport-twitter';
 
 const app = express()
 
